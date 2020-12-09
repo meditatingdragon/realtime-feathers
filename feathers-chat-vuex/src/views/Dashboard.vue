@@ -38,7 +38,7 @@ export default {
   components: {
     BarChart,
     DonutChart,
-    LineChart
+    LineChart,
   },
   data() {
     return {
@@ -48,7 +48,7 @@ export default {
       recentLogins: [],
       openTickets: 0,
       closedTickets: 0,
-      unassignedTickets: 0
+      unassignedTickets: 0,
     };
   },
   computed: {
@@ -61,7 +61,7 @@ export default {
             data: [
               this.openTickets,
               this.closedTickets,
-              this.unassignedTickets
+              this.unassignedTickets,
             ],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
@@ -69,7 +69,7 @@ export default {
               'rgba(255, 206, 86, 0.2)',
               'rgba(75, 192, 192, 0.2)',
               'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
+              'rgba(255, 159, 64, 0.2)',
             ],
             borderColor: [
               'rgba(255, 99, 132, 1)',
@@ -77,11 +77,11 @@ export default {
               'rgba(255, 206, 86, 1)',
               'rgba(75, 192, 192, 1)',
               'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
+              'rgba(255, 159, 64, 1)',
             ],
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       };
     },
     linechartdata() {
@@ -94,9 +94,9 @@ export default {
             fill: false,
             backgroundColor: 'rgba(255, 159, 64, 0.2)',
             borderColor: 'rgba(255, 159, 64, 1)',
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       };
     },
     barchartdata() {
@@ -107,9 +107,9 @@ export default {
             data: [this.messageCount],
             backgroundColor: ['rgba(255, 206, 86, 0.2)'],
             borderColor: ['rgba(255, 206, 86, 1)'],
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       };
     },
     barchartdata2() {
@@ -120,9 +120,9 @@ export default {
             data: [this.activeChatRooms],
             backgroundColor: ['rgba(75, 192, 192, 0.2)'],
             borderColor: ['rgba(75, 192, 192, 1)'],
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       };
     },
     options() {
@@ -130,17 +130,17 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           yAxes: [
             {
               ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
       };
     },
     doptions() {
@@ -148,17 +148,18 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
-        }
+          display: false,
+        },
       };
-    }
+    },
   },
   mounted() {
+    // add an event listener to metrics created event
     this.establishConnection();
   },
   methods: {
     establishConnection() {
-      feathersClient.service('metrics').on('created', data => {
+      feathersClient.service('metrics').on('created', (data) => {
         console.log('Receiving data from server: ', JSON.stringify(data));
         // update variables to the data received from the server
         this.messageCount = data.messageCount;
@@ -169,8 +170,8 @@ export default {
         this.unassignedTickets = data.unassignedTickets;
         this.serverMessage = data;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

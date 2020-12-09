@@ -9,6 +9,9 @@
         />
         <span class="title">Chat</span>
       </div>
+      <router-link class="float-right link" to="/dashboard"
+        >Dashboard</router-link
+      >
     </header>
     <div v-if="user" class="flex flex-row flex-1 clear">
       <UserList :users="users" @logout="logout" />
@@ -19,60 +22,74 @@
 </template>
 
 <script>
-import { useFind } from 'feathers-vuex'
-import { computed } from '@vue/composition-api'
-import UserList from '../components/Users'
-import MessageList from '../components/Messages'
+import { useFind } from 'feathers-vuex';
+import { computed } from '@vue/composition-api';
+import UserList from '../components/Users';
+import MessageList from '../components/Messages';
 
 export default {
   name: 'Chat',
   components: {
     UserList,
-    MessageList
+    MessageList,
   },
   setup(props, context) {
-    const { Message, User } = context.root.$FeathersVuex.api
-    const { $store } = context.root
+    const { Message, User } = context.root.$FeathersVuex.api;
+    const { $store } = context.root;
 
     // Users
-    const user = computed(() => $store.state.auth.user)
+    const user = computed(() => $store.state.auth.user);
     const usersParams = computed(() => {
       return {
         query: {
           $sort: { email: 1 },
-          $limit: 25
-        }
-      }
-    })
-    const { items: users } = useFind({ model: User, params: usersParams })
+          $limit: 25,
+        },
+      };
+    });
+    const { items: users } = useFind({ model: User, params: usersParams });
 
     // Messages
     const messagesParams = computed(() => {
       return {
         query: {
           $sort: { createdAt: 1 },
-          $limit: 25
-        }
-      }
-    })
+          $limit: 25,
+        },
+      };
+    });
     const { items: messages } = useFind({
       model: Message,
-      params: messagesParams
-    })
+      params: messagesParams,
+    });
 
     // Logout
     function logout() {
-      return $store.dispatch('auth/logout')
+      return $store.dispatch('auth/logout');
     }
 
     return {
       user,
       users,
       messages,
-      logout
-    }
-  }
-}
+      logout,
+    };
+  },
+  created() {
+    this.$FeathersVuex.api.Message.on('created', this.handleMessageCreated);
+  },
+  destroyed() {
+    this.$FeathersVuex.api.Message.off('created', this.handleMessageCreated);
+  },
+  methods: {
+    handleMessageCreated(msg) {
+      console.log(msg);
+    },
+    getRandomInt() {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -97,5 +114,9 @@ header.title-bar span.title {
   text-transform: uppercase;
   font-size: 1.2em;
   margin-left: 7px;
+}
+
+.link {
+  padding: 5px;
 }
 </style>
